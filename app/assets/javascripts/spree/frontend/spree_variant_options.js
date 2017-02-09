@@ -27,6 +27,7 @@ SpreeVariantOption.OptionValuesHandler.prototype.init = function() {
 SpreeVariantOption.OptionValuesHandler.prototype.bindEvents = function() {
   this.optionsButtonClickHandler();
   this.clearButtonClickHandler();
+  this.selectVariantClickHandler();
 
 };
 
@@ -47,7 +48,32 @@ SpreeVariantOption.OptionValuesHandler.prototype.optionsButtonClickHandler = fun
       }
     }
   });
+
+
 };
+
+
+SpreeVariantOption.OptionValuesHandler.prototype.selectVariantClickHandler = function() {
+  var _this = this;
+
+  $('.vprice').on('click', function(e) {
+    e.preventDefault();
+    this.variant_id = $(this).attr('id').split('-')[1] ;
+
+    console.log(this.variant_id);
+    _this.variantId = this.variant_id
+     _this.setVariantId(true);
+    _this.showVariantImages(this.variantId);
+     _this.disableCartInputFields(false);
+
+      //_this.variantPrice = this.variant_price;
+
+  });
+
+
+};
+
+
 
 SpreeVariantOption.OptionValuesHandler.prototype.clearButtonClickHandler = function() {
   var _this = this;
@@ -55,6 +81,7 @@ SpreeVariantOption.OptionValuesHandler.prototype.clearButtonClickHandler = funct
   this.clearButtons.on('click', function(e) {
     e.preventDefault();
     $(this).closest('li').addClass('hidden');
+    $('.vprice').addClass('hidden');
     _this.updateSiblings($(this));
     _this.resetAllNextLevel($(this));
   });
@@ -76,7 +103,7 @@ SpreeVariantOption.OptionValuesHandler.prototype.updateSiblings = function(optio
 SpreeVariantOption.OptionValuesHandler.prototype.resetAllNextLevel = function(optionValue) {
   var nextAllDivs = optionValue.closest('.variant-options').nextAll('.variant-options');
   nextAllDivs.find('.clear-option').addClass('hidden');
-  nextAllDivs.find('.vprice').addClass('hidden');
+  $('.vprice').addClass('hidden');
   nextAllDivs.find('.option-value').addClass('locked').removeClass('selected');
   this.disableCartInputFields(true);
   this.setVariantId(false);
