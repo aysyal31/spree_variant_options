@@ -4,12 +4,15 @@
   <ul class="list-group">
     <% option_value_ids = @product.option_value_ids.uniq %>
     <% ordered_option_types = @product.ordered_option_types.includes(:option_values) %>
+    <%#= ordered_option_types.option_values.to_json %>
+    <%#= @product.variants_option_value_details.to_json %>
 
     <% ordered_option_types.each_with_index do |type, index| %>
       <div id="<%= dom_id(type) %>" class="variant-options index-<%= index %>">
         <h6 class="variant-option-type"><strong><%= type.presentation %></strong></h6>
         <ul class="variant-option-values">
           <% type.option_values.sort_by(&:position).each do |value| %>
+            <%#=value.to_json%>
             <% if option_value_ids.include? value.id %>
               <li><%= link_to value.has_image? ? image_tag(value.image.url, alt: value.presentation) : content_tag(:span, value.presentation), "#", title: value.presentation, class: "option-value", data: { type_id: type.id, value_id: value.id, level: (index + 1) } %></li>
             <% end %>
@@ -20,7 +23,19 @@
           <li class="clear"></li>
         </ul>
       </div>
+     <!--  <div id="vprice" class = "vprice" > -->
+
+      
     <% end %>
+
+            <% @product.variants.each do |v| %>
+
+          <div id="vprice-<%=v.id%>" class = "vprice hidden" >
+            <h2> <%=v.price %> </h2> 
+          </div>
+             
+         <%end%>
+
     <%= hidden_field_tag "variant_id", "", id: "variant_id", class: "hidden" %>
     <script type="text/javascript">
     //<![CDATA[

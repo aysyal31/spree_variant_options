@@ -13,6 +13,7 @@ SpreeVariantOption.OptionValuesHandler = function(selectors) {
   this.thumbImages = selectors.thumbImages;
   this.variantId = 0;
   this.variantPrice = 0;
+//  this.variantSeller = "default";
 };
 
 SpreeVariantOption.OptionValuesHandler.prototype.init = function() {
@@ -75,10 +76,12 @@ SpreeVariantOption.OptionValuesHandler.prototype.updateSiblings = function(optio
 SpreeVariantOption.OptionValuesHandler.prototype.resetAllNextLevel = function(optionValue) {
   var nextAllDivs = optionValue.closest('.variant-options').nextAll('.variant-options');
   nextAllDivs.find('.clear-option').addClass('hidden');
+  nextAllDivs.find('.vprice').addClass('hidden');
   nextAllDivs.find('.option-value').addClass('locked').removeClass('selected');
   this.disableCartInputFields(true);
   this.setVariantId(false);
   this.thumbImages.show();
+
 };
 
 SpreeVariantOption.OptionValuesHandler.prototype.setComparingConditions = function (conditions) {
@@ -92,10 +95,13 @@ SpreeVariantOption.OptionValuesHandler.prototype.setComparingConditions = functi
 SpreeVariantOption.OptionValuesHandler.prototype.anyVariantExists = function(conditions) {
   var variant = false;
   this.setComparingConditions(conditions);
+  var v = {} 
 
   $.each(variant_option_details, function() {
     if(objectContains(this.option_types, conditions)) {
       variant = { inStock: this.in_stock };
+      console.log(variant);
+      v << variant ;
       return false;
     }
   });
@@ -125,6 +131,7 @@ SpreeVariantOption.OptionValuesHandler.prototype.unlockNextLevel = function(opti
 
     conditions[$(this).data('typeId')] = $(this).data('valueId');
     details = _this.anyVariantExists(conditions);
+    console.log("h"+details);
 
     if(details) {
       availableOptionValueCount += 1;
@@ -149,22 +156,30 @@ SpreeVariantOption.OptionValuesHandler.prototype.setVariantWithSelecetedValues =
       _this = this;
   this.variantId = 0;
   this.setComparingConditions(conditions);
+  var v = {};
 
   $.each(variant_option_details, function() {
     if(objectContains(this.option_types, conditions)) {
-      _this.variantId = this.variant_id;
-      _this.variantPrice = this.variant_price;
-      return false;
+      //_this.variantId = this.variant_id;
+      //_this.variantPrice = this.variant_price;
+      console.log("HH"); 
+      $('#vprice-'+this.variant_id).removeClass('hidden');   
+      //v << this ;
     }
   });
 
-  if(this.variantId) {
-    this.setVariantId(true);
-    this.showVariantImages(this.variantId);
-    this.disableCartInputFields(false);
-  } else {
-    this.disableCartInputFields(true);
-  }
+   //  $.each(v, function() {
+   //    $('.vprice-'+this.variant_id).show();
+
+   // });
+
+  //   if(v) {
+  //   this.setVariantId(true);
+  //   this.showVariantImages(this.variantId);
+  //   this.disableCartInputFields(false);
+  // } else {
+  //   this.disableCartInputFields(true);
+  // }
 };
 
 SpreeVariantOption.OptionValuesHandler.prototype.showVariantImages = function(variantId) {
